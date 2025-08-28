@@ -50,15 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.onsubmit = (e) => {
     e.preventDefault();
-    const data = {
-      nome_cliente: form.nome_cliente.value,
-      dt_entrada: form.dt_entrada.value,
-      status_lead: form.status_lead.value,
-      etapa_funil: form.etapa_funil.value,   // agora aceita string vazia
-      dtfechamento: form.dtfechamento.value,
-      status_pagamento: form.status_pagamento.value,
-      observacoes: form.observacoes.value
-    };
+      const data = {
+    nome_cliente: form.nome_cliente.value,
+    dt_contato: form.dt_contato.value,
+    dt_ligacao: form.dt_ligacao.value,
+    status_ligacao: form.status_ligacao.value,
+    resultado_ligacao: form.resultado_ligacao.value,
+    motivo_perda: form.motivo_perda.value,
+    observacoes: form.observacoes.value
+  };
     const arr = JSON.parse(localStorage.getItem('registros')) || [];
     arr.push(data);
     localStorage.setItem('registros', JSON.stringify(arr));
@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
     limparFormulario();
     renderTable();
   };
+
+  
 
   function renderTable() {
     tabelaBody.innerHTML = '';
