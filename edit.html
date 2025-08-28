@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editar Registro - DOMOS COMPANY</title>
+  <link rel="stylesheet" href="SRC/VIEW/Styles/style_edit.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"></script>
+</head>
+
+<body>
+  <div class="container_form">
+    <h2>Editar Registro</h2>
+    <form id="editForm">
+      <div class="row_container">
+                  <div class="input-box">
+            <label for="nomeCliente" class="form-label">NOME DO CLIENTE</label>
+            <input type="text" name="nome_cliente" id="nomeCliente" class="form_control_nome"
+              placeholder="Inserir nome do cliente" />
+          </div>
+
+                 <div class="input-box">
+            <label for="dt_contato" class="form-label">DATA DO 1º CONTATO</label>
+            <input type="date" name="dt_contato" id="dt_contato" class="form_control_dt_contato" />
+          </div>
+
+               <div class="input-box">
+            <label for="dt_ligacao" class="form-label">DATA DA LIGAÇÃO</label>
+            <input type="date" name="dt_ligacao" id="dt_ligacao" class="form_control_dt_ligacao" />
+          </div>
+
+          <div class="status_ligacao">
+            <label for="status_ligacao" class="form-label">STATUS DA LIGAÇÃO</label>
+            <select name="status_ligacao" id="status_ligacao" class="form_control_status_ligacao">
+              <option value="">-- Selecione --</option>
+              <option value="Novo">Atendeu</option>
+              <option value="Em contato">Não atendeu</option>
+              <option value="Orçamento enviado">Número Inválido</option>
+              <option value="Negociação">Retornar Ligação</option>
+            </select>
+          </div>
+
+          <div class="resultado_ligacao">
+            <label for="resultado_ligacao" class="form-label">RESULTADO DA LIGAÇÃO</label>
+            <select name="resultado_ligacao" id="resultado_ligacao" class="form_control_result_ligacao">
+              <option value="">-- Selecione --</option>
+              <option value="Novo">Interessado (segue para comercial)</option>
+              <option value="Em contato">Sem interesse</option>
+              <option value="Orçamento enviado">Pedido de retorno futuro</option>
+              <option value="Negociação">Já resolveu de outra forma</option>
+            </select>
+          </div>
+
+
+         <div class="motivo_perda">
+            <label for="motivo_perda" class="form-label">MOTIVO DA PERDA</label>
+            <select name="motivo_perda" id="motivo_perda" class="form_control_motivo_perda">
+              <option value="">-- Selecione --</option>
+              <option value="Novo">Preço</option>
+              <option value="Em contato">Prazo</option>
+              <option value="Orçamento enviado">Já contratou concorrente</option>
+              <option value="Negociação">Outro (Explicar em Observações)</option>
+            </select>
+          </div>
+
+
+    
+        <div class="campo_obs full-width">
+          <label for="observacoes" class="form_label_obs">OBSERVAÇÕES</label>
+          <textarea name="observacoes" id="observacoes" class="form_control_obs"></textarea>
+        </div>
+      </div>
+      <div class="container_btn">
+        <button type="submit" class="btn-salvar"><i class="fas fa-save"></i> Atualizar</button>
+        <button type="button" id="cancelBtn" class="btn-salvar"><i class="fas fa-times"></i> Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="JAVASCRIPT/edit.js"></script>
+</body>
+</html>
