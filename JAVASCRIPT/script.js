@@ -50,15 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.onsubmit = (e) => {
     e.preventDefault();
-      const data = {
-    nome_cliente: form.nome_cliente.value,
-    dt_contato: form.dt_contato.value,
-    dt_ligacao: form.dt_ligacao.value,
-    status_ligacao: form.status_ligacao.value,
-    resultado_ligacao: form.resultado_ligacao.value,
-    motivo_perda: form.motivo_perda.value,
-    observacoes: form.observacoes.value
-  };
+    const data = {
+      nome_cliente: form.nome_cliente.value,
+      dt_contato: form.dt_contato.value,
+      dt_ligacao: form.dt_ligacao.value,
+      status_ligacao: form.status_ligacao.value,
+      resultado_ligacao: form.resultado_ligacao.value,
+      motivo_perda: form.motivo_perda.value,
+      observacoes: form.observacoes.value
+    };
     const arr = JSON.parse(localStorage.getItem('registros')) || [];
     arr.push(data);
     localStorage.setItem('registros', JSON.stringify(arr));
@@ -68,34 +68,22 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTable();
   };
 
-  
-
   function renderTable() {
     tabelaBody.innerHTML = '';
     const arr = JSON.parse(localStorage.getItem('registros')) || [];
     arr.forEach((r, i) => {
       const tr = document.createElement('tr');
 
-      ['nome_cliente', 'dt_entrada', 'status_lead', 'etapa_funil', 'dtfechamento', 'status_pagamento', 'observacoes']
+      ['nome_cliente', 'dt_contato', 'dt_ligacao', 'status_ligacao', 'resultado_ligacao', 'motivo_perda', 'observacoes']
         .forEach(key => {
           const td = document.createElement('td');
           let txt = r[key] || '';
-          if (key === 'dt_entrada' || key === 'dtfechamento') txt = formatBRDate(txt);
-          if (key === 'etapa_funil') txt = formatBRMoney(txt);
 
-          if (key === 'status_pagamento') {
-            const slug = txt
-              .toLowerCase()
-              .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-              .replace(/\s+/g, '-');
-            const span = document.createElement('span');
-            span.textContent = txt;
-            span.classList.add('status-badge', `status-${slug}`);
-            td.appendChild(span);
-          } else {
-            td.textContent = txt;
+          if (key === 'dt_contato' || key === 'dt_ligacao') {
+            txt = formatBRDate(txt);
           }
 
+          td.textContent = txt;
           tr.appendChild(td);
         });
 
@@ -122,28 +110,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ✅ retorna a data como string dd/mm/yyyy
+  function toBRDateText(isoDate) {
+    return isoDate ? formatBRDate(isoDate) : '';
+  }
+
   function buildWorkbook(regs, name) {
-    const header = ['Nome do Cliente','Data do 1º contato','Data da ligação','Status da ligação','Resultado da ligação','Motivo da perda','Observações'];
+    const header = [
+      'Nome do Cliente',
+      'Data do 1º contato',
+      'Data da ligação',
+      'Status da ligação',
+      'Resultado da ligação',
+      'Motivo da perda',
+      'Observações'
+    ];
+
+    // datas como texto para o Excel
     const aoa = [header].concat(regs.map(r => [
       r.nome_cliente,
-      r.dt_entrada ? new Date(r.dt_entrada) : null,
-      r.status_lead,
-      parseCurrency(r.etapa_funil),
-      r.dtfechamento ? new Date(r.dtfechamento) : null,
-      r.status_pagamento,
+      toBRDateText(r.dt_contato),
+      toBRDateText(r.dt_ligacao),
+      r.status_ligacao,
+      r.resultado_ligacao,
+      r.motivo_perda,
       r.observacoes
     ]));
-    const ws = XLSX.utils.aoa_to_sheet(aoa, { cellDates: true });
-    ws['!cols'] = [{wch:20},{wch:12},{wch:15},{wch:15},{wch:12},{wch:15},{wch:30}];
-    const range = XLSX.utils.decode_range(ws['!ref']);
-    for (let R = range.s.r + 1; R <= range.e.r; ++R) {
-      const cellB = ws[XLSX.utils.encode_cell({r:R,c:1})];
-      if (cellB && cellB.t === 'd') cellB.z = 'dd/mm/yyyy';
-      const cellD = ws[XLSX.utils.encode_cell({r:R,c:3})];
-      if (cellD && cellD.t === 'n') cellD.z = 'R$ #,##0.00';
-      const cellE = ws[XLSX.utils.encode_cell({r:R,c:4})];
-      if (cellE && cellE.t === 'd') cellE.z = 'dd/mm/yyyy';
-    }
+
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols'] = [
+      { wch: 20 }, { wch: 15 }, { wch: 15 }, { wch: 20 }, { wch: 25 }, { wch: 20 }, { wch: 30 }
+    ];
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, name);
     return wb;
